@@ -1,0 +1,201 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Labs Challenge API",
+    "description": "Labs Challenge API Documentation",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081/api/v1/"
+    }
+  ],
+  "paths": {
+    "/repositories": {
+      "get": {
+        "summary": "Search Repositories",
+        "description": "Fetch a list of the most popular repositories based on query parameters.",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Search from the date onwards.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024-01-01"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Programming language to filter repositories by.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "JavaScript"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort results by a specified field.",
+            "schema": {
+              "type": "string",
+              "enum": ["stars"]
+            },
+            "example": "stars"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order of results (ascending or descending).",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            },
+            "example": "desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number of the results to fetch.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results per page.",
+            "schema": {
+              "type": "integer",
+              "enum": [10, 50, 100]
+            },
+            "example": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of repositories.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of repositories found.",
+                      "example": 100
+                    },
+                    "currentPage": {
+                      "type": "integer",
+                      "description": "Current page number.",
+                      "example": 1
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "description": "Total number of pages.",
+                      "example": 10
+                    },
+                    "repositories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Repository ID."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Repository name."
+                          },
+                          "full_name": {
+                            "type": "string",
+                            "description": "Full repository name."
+                          },
+                          "html_url": {
+                            "type": "string",
+                            "description": "URL of the repository."
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Repository description."
+                          },
+                          "stargazers_count": {
+                            "type": "integer",
+                            "description": "Number of stars."
+                          },
+                          "forks_count": {
+                            "type": "integer",
+                            "description": "Number of forks."
+                          },
+                          "language": {
+                            "type": "string",
+                            "description": "Primary language of the repository."
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Repository creation date."
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Last updated date."
+                          }
+                        },
+                        "required": ["id", "name", "full_name", "html_url", "stargazers_count"]
+                      }
+                    }
+                  },
+                  "required": ["total_count", "items"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message."
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Invalid query parameter."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message."
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Internal server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
